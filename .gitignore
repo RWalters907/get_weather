@@ -1,0 +1,50 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Virtual environment folder
+venv/
+
+# dotenv environment variables file
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+
+# macOS system files
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python build/dist folders
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Package manager metadata
+Pipfile
+Pipfile.lock
+poetry.lock
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.cache/
+
+# Type checkers
+.mypy_cache/
+
+# Others
+*.sqlite3

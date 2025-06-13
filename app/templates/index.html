@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pool Weather Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4faff;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0077cc;
+            margin-bottom: 1em;
+        }
+
+        .form-wrapper {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+
+        button {
+            background-color: #0077cc;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        .message {
+            text-align: center;
+            margin-bottom: 2em;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .weather-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .weather-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+            padding: 20px;
+            width: 320px;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        .weather-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .zip-header {
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #004080;
+        }
+
+        .current-weather {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .temp {
+            font-size: 3em;
+            font-weight: 700;
+            margin: 5px 0;
+        }
+
+        .description {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: capitalize;
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+        }
+
+        .extra-info {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .forecast-container {
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+
+        .forecast-day {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .forecast-date {
+            font-weight: 600;
+            color: #003366;
+            width: 100px;
+        }
+
+        .forecast-temp {
+            min-width: 70px;
+            font-weight: 600;
+            text-align: right;
+            color: #cc3300;
+        }
+
+        .forecast-low {
+            color: #3366cc;
+            margin-left: 10px;
+            font-weight: 600;
+            text-align: right;
+            min-width: 70px;
+        }
+
+        .forecast-desc {
+            flex: 1;
+            margin-left: 15px;
+            font-style: italic;
+            color: #444;
+            text-transform: capitalize;
+        }
+
+        .forecast-icon {
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Pool Weather Dashboard</h1>
+
+    <div class="form-wrapper">
+        <form method="post">
+            <button type="submit">Get Weather</button>
+        </form>
+    </div>
+
+    {% if message %}
+        <div class="message">{{ message }}</div>
+    {% endif %}
+
+    {% if weather_data %}
+    <div class="weather-container">
+        {% for item in weather_data %}
+            {% if item.error %}
+                <div class="weather-card" style="opacity:1;">
+                    <div class="zip-header">ZIP {{ item.zip }}</div>
+                    <div class="message" style="color: red;">Error: {{ item.error }}</div>
+                </div>
+            {% else %}
+                <div class="weather-card" style="opacity:1;">
+                    <div class="zip-header">ZIP {{ item.zip }}</div>
+
+                    <!-- Current Weather -->
+                    <div class="current-weather">
+                        <img
+                            class="icon"
+                            src="https://openweathermap.org/img/wn/{{ item.current.icon }}@2x.png"
+                            alt="{{ item.current.description }}"
+                            title="{{ item.current.description }}"
+                        />
+                        <div class="temp">{{ item.current.temperature }}&deg;F</div>
+                        <div class="description">{{ item.current.description }}</div>
+                        <div class="extra-info">
+                            Humidity: {{ item.current.humidity }}%<br />
+                            Wind: {{ item.current.wind_speed }} mph
+                        </div>
+                    </div>
+
+                    <!-- 3-day Forecast -->
+                    <div class="forecast-container">
+                        {% for day in item.forecast %}
+                        <div class="forecast-day">
+                            <div class="forecast-date">{{ day.date }}</div>
+                            <img
+                                class="forecast-icon"
+                                src="https://openweathermap.org/img/wn/{{ day.icon }}@2x.png"
+                                alt="{{ day.description }}"
+                                title="{{ day.description }}"
+                            />
+                            <div class="forecast-temp">Hi: {{ day.high | round(0) }}&deg;F</div>
+                            <div class="forecast-low">Lo: {{ day.low | round(0) }}&deg;F</div>
+                            <div class="forecast-desc">{{ day.description }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</body>
+</html>
